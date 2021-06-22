@@ -44,7 +44,7 @@ namespace EShop.Api
             });
             
             services.AddSingleton(provider => new BlobStorageSettings(
-                new BlobServiceClient(AzureConnectionString()), "gh-network"));
+                new BlobServiceClient(AzureConnectionString()), "eshop"));
             services.AddSingleton<IImagesStorage, ImagesStorage>();
 
             services.AddDbContext<MsSqlContext>(options =>
