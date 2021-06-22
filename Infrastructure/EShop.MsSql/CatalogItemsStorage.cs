@@ -64,7 +64,6 @@ namespace EShop.MsSql
             item.Description = updatedItem.Description;
             item.Price = updatedItem.Price;
             item.PictureFileName = updatedItem.PictureFileName;
-            item.PictureUri = updatedItem.PictureUri;
             item.AvailableStock = updatedItem.AvailableStock;
 
             _context.CatalogItems.Update(item);
@@ -81,6 +80,37 @@ namespace EShop.MsSql
             }
 
             _context.CatalogItems.Remove(item);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdatePictureUriAsync(Guid id, string pictureUri)
+        {
+            var item = await _context.CatalogItems.SingleOrDefaultAsync(x => x.Id == id);
+
+            if (item == null)
+            {
+                return;
+            }
+
+            item.PictureUri = pictureUri;
+
+            _context.CatalogItems.Update(item);
+            await _context.SaveChangesAsync();
+
+        }
+
+        public async Task DeletePictureUriAsync(Guid id)
+        {
+            var item = await _context.CatalogItems.SingleOrDefaultAsync(x => x.Id == id);
+
+            if (item == null)
+            {
+                return;
+            }
+
+            item.PictureUri = null;
+
+            _context.CatalogItems.Update(item);
             await _context.SaveChangesAsync();
         }
 

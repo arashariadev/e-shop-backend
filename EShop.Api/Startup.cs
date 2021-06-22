@@ -76,7 +76,7 @@ namespace EShop.Api
         //Need to change. Use key vault or local user secrets to save azure connection string
         private string AzureConnectionString()
         {
-            return @"";
+            return @"DefaultEndpointsProtocol=https;AccountName=ehsopblob;AccountKey=YOURKEY;EndpointSuffix=core.windows.net";
         }
 
         //Need delete. Connection string for dev

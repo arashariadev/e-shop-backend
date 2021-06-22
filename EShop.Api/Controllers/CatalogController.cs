@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Threading.Tasks;
 using EShop.Api.Helpers;
 using EShop.Api.Models;
@@ -132,6 +133,62 @@ namespace EShop.Api.Controllers
             
             await _catalogItemsService.DeleteItemAsync(id);
             return NoContent();
+        }
+        
+        /// <summary>
+        /// Upload image
+        /// </summary>
+        /// <param name="file">file</param>
+        /// <param name="id">item id</param>
+        /// <response code="200">Return item with image url</response>
+        /// <response code="400">Item not found or file is null</response>
+        [HttpPost("upload/{id:guid}")]
+        [RequestSizeLimit(31457280)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status413PayloadTooLarge)]
+        public async Task<ActionResult<CatalogItems>> UploadImageAsync(IFormFile file, [FromRoute] Guid id)
+        {
+            if (file != null)
+            {
+                await using (var memoryStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(memoryStream);
+                    var extension = Path.GetExtension(file.FileName);
+                    var result = await _catalogItemsService.UpdateImageAsync(id, memoryStream, extension);
+                    if (result.Successed)
+                    {
+                        return Ok(await _catalogItemsService.FindItemByIdAsync(id));
+                    }
+
+                    return BadRequest(result.ToProblemDetails());
+                }
+            }
+
+            return BadRequest("File is null");
+        }
+
+        /// <summary>
+        /// Delete image url
+        /// </summary>
+        /// <param name="id">Publication id</param>
+        /// <response code="200">Image url now is null</response>
+        /// <response code="404">Publication not found or images url is null</response>
+        [HttpDelete("delete/{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> DeleteImageAsync([FromRoute] Guid id)
+        {
+            var item = await _catalogItemsService.FindItemByIdAsync(id);
+
+            if (item?.PictureUri == null)
+            {
+                return NotFound();
+            }
+
+            await _catalogItemsService.DeleteImageAsync(id);
+
+            return Ok();
         }
     }
 }

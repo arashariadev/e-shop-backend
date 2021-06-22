@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Domain;
+using EShop.Domain.Azure;
 
 namespace EShop.Domain.Catalog
 {
@@ -16,16 +18,22 @@ namespace EShop.Domain.Catalog
         Task<DomainResult> UpdateItemAsync(Guid id, string name, string description, decimal price, string pictureFileName, string pictureUri, int availableStock);
 
         Task DeleteItemAsync(Guid id);
+        
+        Task<DomainResult> UpdateImageAsync(Guid id, Stream stream, string extension);
+
+        Task<DomainResult> DeleteImageAsync(Guid id);
     }
 
     public class CatalogItemsService : ICatalogItemsService
     {
         private readonly ICatalogItemsStorage _catalogItemsStorage;
+        private readonly IImagesStorage _imagesStorage;
         private readonly IValidator<CatalogItemContext> _validator;
         
-        public CatalogItemsService(ICatalogItemsStorage catalogItemsStorage, IValidator<CatalogItemContext> validator)
+        public CatalogItemsService(ICatalogItemsStorage catalogItemsStorage, IValidator<CatalogItemContext> validator, IImagesStorage imagesStorage)
         {
             _catalogItemsStorage = catalogItemsStorage;
+            _imagesStorage = imagesStorage;
             _validator = validator;
         }
         
@@ -80,6 +88,38 @@ namespace EShop.Domain.Catalog
         public async Task DeleteItemAsync(Guid id)
         {
             await _catalogItemsStorage.DeleteItemAsync(id);
+        }
+
+        public async Task<DomainResult> UpdateImageAsync(Guid id, Stream stream, string extension)
+        {
+            var item = await _catalogItemsStorage.FindItemByIdAsync(id);
+            if (item == null)
+            {
+                return DomainResult.Error("Item from catalog not found.");
+            }
+
+            var fileName = Guid.NewGuid() + extension;
+            stream.Position = 0;
+
+            var imagesUrl = await _imagesStorage.UploadImageAsync(stream, fileName);
+            if (item.PictureUri != null)
+            {
+                return DomainResult.Error("Picture is exist");
+            }
+
+            await _catalogItemsStorage.UpdatePictureUriAsync(id, imagesUrl);
+            return DomainResult.Success();
+        }
+
+        public async Task<DomainResult> DeleteImageAsync(Guid id)
+        {
+            var item = await _catalogItemsStorage.FindItemByIdAsync(id);
+
+            await _imagesStorage.DeleteImageAsync(item.PictureUri);
+
+            await _catalogItemsStorage.DeletePictureUriAsync(id);
+
+            return DomainResult.Success();
         }
     }
 }

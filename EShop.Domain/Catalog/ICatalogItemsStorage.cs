@@ -16,5 +16,9 @@ namespace EShop.Domain.Catalog
         Task UpdateItemAsync(Guid id, CatalogItems updatedItem);
 
         Task DeleteItemAsync(Guid id);
+
+        Task UpdatePictureUriAsync(Guid id, string pictureUri);
+
+        Task DeletePictureUriAsync(Guid id);
     }
 }
