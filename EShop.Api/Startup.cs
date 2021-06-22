@@ -1,4 +1,7 @@
+using Azure.Storage.Blobs;
 using EShop.Api.Helpers.OpenApi;
+using EShop.Azure;
+using EShop.Domain.Azure;
 using EShop.Domain.Catalog;
 using EShop.MsSql;
 using Microsoft.AspNetCore.Builder;
@@ -39,6 +42,10 @@ namespace EShop.Api
 
                 options.IncludeXmlComments(XmlPathProvider.XmlPath);
             });
+            
+            services.AddSingleton(provider => new BlobStorageSettings(
+                new BlobServiceClient(AzureConnectionString()), "gh-network"));
+            services.AddSingleton<IImagesStorage, ImagesStorage>();
 
             services.AddDbContext<MsSqlContext>(options =>
                 options.UseSqlServer(
@@ -65,8 +72,14 @@ namespace EShop.Api
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
+        
+        //Need to change. Use key vault or local user secrets to save azure connection string
+        private string AzureConnectionString()
+        {
+            return @"";
+        }
 
-        //Need to delete, connection string for dev
+        //Need delete. Connection string for dev
         private string MssqlConnectionStringDev()
         {
             return @"Server=DESKTOP-FQ83PKI;Database=EShop;Trusted_Connection=True;";

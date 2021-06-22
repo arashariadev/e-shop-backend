@@ -22,6 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Infrastructure\EShop.Azure\EShop.Azure.csproj" />
       <ProjectReference Include="..\Infrastructure\EShop.MsSql\EShop.MsSql.csproj" />
     </ItemGroup>
 </Project>
