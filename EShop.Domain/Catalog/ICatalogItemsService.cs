@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Domain;
 using EShop.Domain.Azure;
+using Microsoft.Extensions.Logging;
 
 namespace EShop.Domain.Catalog
 {
@@ -29,16 +30,23 @@ namespace EShop.Domain.Catalog
         private readonly ICatalogItemsStorage _catalogItemsStorage;
         private readonly IImagesStorage _imagesStorage;
         private readonly IValidator<CatalogItemContext> _validator;
+        private readonly ILogger<CatalogItemsService> _logger;
         
-        public CatalogItemsService(ICatalogItemsStorage catalogItemsStorage, IValidator<CatalogItemContext> validator, IImagesStorage imagesStorage)
+        public CatalogItemsService(
+            ICatalogItemsStorage catalogItemsStorage,
+            IValidator<CatalogItemContext> validator,
+            IImagesStorage imagesStorage,
+            ILogger<CatalogItemsService> logger)
         {
             _catalogItemsStorage = catalogItemsStorage;
             _imagesStorage = imagesStorage;
             _validator = validator;
+            _logger = logger;
         }
         
         public async Task<(IEnumerable<CatalogItems>, long)> GetItemsAsync(int skip, int take)
         {
+            _logger.LogWarning("Test Warn");
             return await _catalogItemsStorage.GetItemsAsync(skip, take);
         }
 

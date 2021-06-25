@@ -49,7 +49,7 @@ namespace EShop.Api
 
             services.AddDbContext<MsSqlContext>(options =>
                 options.UseSqlServer(
-                    MssqlConnectionStringDev(),
+                    MssqlConnectionString(),
                     b => b.MigrationsAssembly("EShop.Api")));
 
             services.AddScoped<IValidator<CatalogItemContext>, CatalogItemValidator>();
@@ -57,8 +57,10 @@ namespace EShop.Api
             services.AddScoped<ICatalogItemsService, CatalogItemsService>();
         }
         
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, MsSqlContext context)
         {
+            context.Database.Migrate();
+            
             if (env.IsDevelopment())
             {
                 app.UseSwagger()
@@ -76,10 +78,10 @@ namespace EShop.Api
         //Need to change. Use key vault or local user secrets to save azure connection string
         private string AzureConnectionString()
         {
-            return @"DefaultEndpointsProtocol=https;AccountName=ehsopblob;AccountKey=YOURKEY;EndpointSuffix=core.windows.net";
+            return @"DefaultEndpointsProtocol=https;AccountName=ehsopblob;AccountKey=P4QxkwgxdjjbJ5mcgWy5w5RN77KHpDUyj2Iol+NEIe5hU6o9ELXyM1/yeX3pzj1ya5U+M+1PeXFkw8J3I+BvRQ==;EndpointSuffix=core.windows.net";
         }
 
-        //Need delete. Connection string for dev
+        //Need to delete. Connection string for dev
         private string MssqlConnectionStringDev()
         {
             return @"Server=DESKTOP-FQ83PKI;Database=EShop;Trusted_Connection=True;";
