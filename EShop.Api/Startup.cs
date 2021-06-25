@@ -1,3 +1,4 @@
+using System;
 using Azure.Storage.Blobs;
 using EShop.Api.Helpers.OpenApi;
 using EShop.Azure;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Filters;
 
 namespace EShop.Api
@@ -42,11 +44,11 @@ namespace EShop.Api
 
                 options.IncludeXmlComments(XmlPathProvider.XmlPath);
             });
-            
+
             services.AddSingleton(provider => new BlobStorageSettings(
                 new BlobServiceClient(AzureConnectionString()), "eshop"));
             services.AddSingleton<IImagesStorage, ImagesStorage>();
-
+            
             services.AddDbContext<MsSqlContext>(options =>
                 options.UseSqlServer(
                     MssqlConnectionString(),
@@ -57,9 +59,17 @@ namespace EShop.Api
             services.AddScoped<ICatalogItemsService, CatalogItemsService>();
         }
         
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, MsSqlContext context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, MsSqlContext context, ILogger<Startup> logger)
         {
-            context.Database.Migrate();
+            try
+            {
+                context.Database.Migrate();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred with auto migrate the DB in Startup.cs.");
+            }
+            
             
             if (env.IsDevelopment())
             {
@@ -78,7 +88,7 @@ namespace EShop.Api
         //Need to change. Use key vault or local user secrets to save azure connection string
         private string AzureConnectionString()
         {
-            return @"DefaultEndpointsProtocol=https;AccountName=ehsopblob;AccountKey=P4QxkwgxdjjbJ5mcgWy5w5RN77KHpDUyj2Iol+NEIe5hU6o9ELXyM1/yeX3pzj1ya5U+M+1PeXFkw8J3I+BvRQ==;EndpointSuffix=core.windows.net";
+            return @"DefaultEndpointsProtocol=https;AccountName=ehsopblob;AccountKey=es;EndpointSuffix=core.windows.net";
         }
 
         //Need to delete. Connection string for dev

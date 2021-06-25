@@ -17,7 +17,7 @@ namespace EShop.Api
                 {
                     configuration.Enrich.FromLogContext()
                         .WriteTo.Console()
-                        .WriteTo.File("eShopLogs.txt");
+                        .WriteTo.File("../eShopLogs.txt");
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
