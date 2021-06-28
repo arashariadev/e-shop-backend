@@ -28,13 +28,13 @@ namespace EShop.Domain.Identity
                 results.Add(new DomainError($"{nameof(lastName)} can not be null, empty or more than 75 chars"));
             }
             
-            if (string.IsNullOrEmpty(phoneNumber) || phoneNumber.Length > 12)
+            if (string.IsNullOrEmpty(phoneNumber) || phoneNumber.Length is > 12 or < 10)
             {
-                results.Add(new DomainError($"{nameof(phoneNumber)} can not be empty or more than 12 chars"));
+                results.Add(new DomainError($"{nameof(phoneNumber)} can not be empty or more than 12 or less than 10 chars"));
             }
             
             //Need to fix
-            if (string.IsNullOrEmpty(email) || email.Length > 70)
+            if (string.IsNullOrEmpty(email) || email.Length > 70 || !email.Contains("@"))
             {
                 results.Add(new DomainError($"{nameof(email)} is not valid"));
             }
