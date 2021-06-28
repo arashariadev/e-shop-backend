@@ -53,7 +53,7 @@ namespace EShop.ApiTests.CatalogItems
             });
             
             // Act 
-            var response = await client.PostAsync("/api/Catalog", input.AsJsonContent());
+            var response = await client.PostAsync("/Catalog", input.AsJsonContent());
             
             // Assert
             Assert.AreEqual(HttpStatusCode.Created, response.StatusCode);
@@ -90,7 +90,7 @@ namespace EShop.ApiTests.CatalogItems
             });
             
             // Act
-            var response = await client.PostAsync("/api/Catalog", input.AsJsonContent());
+            var response = await client.PostAsync("/Catalog", input.AsJsonContent());
             
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);

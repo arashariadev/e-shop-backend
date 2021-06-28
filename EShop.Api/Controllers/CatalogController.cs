@@ -12,7 +12,7 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace EShop.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class CatalogController : ControllerBase
     {

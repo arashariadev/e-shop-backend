@@ -32,7 +32,7 @@ namespace EShop.ApiTests.CatalogItems
             });
             
             // Act
-            var response = await client.GetAsync($"/api/Catalog/{id}/");
+            var response = await client.GetAsync($"/Catalog/{id}/");
             
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);

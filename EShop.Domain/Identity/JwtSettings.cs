@@ -1,4 +1,6 @@
-﻿namespace EShop.Domain.Identity
+﻿using System;
+
+namespace EShop.Domain.Identity
 {
     public class JwtSettings
     {

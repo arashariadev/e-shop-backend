@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 using Azure.Storage.Blobs;
 using EShop.Api.Helpers.OpenApi;
 using EShop.Azure;
@@ -39,16 +40,16 @@ namespace EShop.Api
             Configuration.Bind(nameof(jwtSettings), jwtSettings);
             services.AddSingleton(jwtSettings);
 
-
             services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.SaveToken = true;
+                try
                 {
-                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(x =>
-                {
-                    x.SaveToken = true;
                     x.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
@@ -58,15 +59,20 @@ namespace EShop.Api
                         RequireExpirationTime = false,
                         ValidateLifetime = true
                     };
-                });
+                }
+                catch (Exception ex)
+                {
+                    
+                }
+            });
 
             services.AddIdentityCore<UserEntity>(options =>
                 {
-                    options.Password.RequireDigit = false;
-                    options.Password.RequiredLength = 6;
+                    options.Password.RequireDigit = true;
+                    options.Password.RequiredLength = 8;
                     options.Password.RequireNonAlphanumeric = false;
-                    options.Password.RequireLowercase = false;
-                    options.Password.RequireUppercase = false;
+                    options.Password.RequireLowercase = true;
+                    options.Password.RequireUppercase = true;
                 })
                 .AddEntityFrameworkStores<MsSqlContext>();
 
