@@ -46,7 +46,6 @@ namespace EShop.Domain.Catalog
         
         public async Task<(IEnumerable<CatalogItems>, long)> GetItemsAsync(int skip, int take)
         {
-            _logger.LogWarning("Test Warn");
             return await _catalogItemsStorage.GetItemsAsync(skip, take);
         }
 
@@ -78,7 +77,7 @@ namespace EShop.Domain.Catalog
 
             if (!result.Successed)
             {
-                return (result);
+                return result;
             }
 
             var item = await _catalogItemsStorage.FindItemByIdAsync(id);

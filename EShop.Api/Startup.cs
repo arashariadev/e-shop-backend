@@ -1,10 +1,15 @@
 using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Text.Json.Serialization;
 using Azure.Storage.Blobs;
 using EShop.Api.Helpers.OpenApi;
 using EShop.Azure;
 using EShop.Domain.Azure;
 using EShop.Domain.Catalog;
+using EShop.Domain.Identity;
 using EShop.MsSql;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -13,23 +18,64 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.Filters;
 
 namespace EShop.Api
 {
     public class Startup
     {
+        private IConfiguration Configuration { get; }
+        
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
             
+            var jwtSettings = new JwtSettings();
+            Configuration.Bind(nameof(jwtSettings), jwtSettings);
+            services.AddSingleton(jwtSettings);
+
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.SaveToken = true;
+                try
+                {
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings.Secret)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        RequireExpirationTime = false,
+                        ValidateLifetime = true
+                    };
+                }
+                catch (Exception ex)
+                {
+                    
+                }
+            });
+
+            services.AddIdentityCore<UserEntity>(options =>
+                {
+                    options.Password.RequireDigit = true;
+                    options.Password.RequiredLength = 8;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireLowercase = true;
+                    options.Password.RequireUppercase = true;
+                })
+                .AddEntityFrameworkStores<MsSqlContext>();
+
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
@@ -37,6 +83,21 @@ namespace EShop.Api
                     Title = "EShop.Api",
                     Description = "Http client for EShop",
                     Version = "1.0.0"
+                });
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the bearer scheme",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
+                });
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {new OpenApiSecurityScheme{Reference = new OpenApiReference
+                    {
+                        Id = "Bearer",
+                        Type = ReferenceType.SecurityScheme
+                    }}, new List<string>()}
                 });
 
                 options.OperationFilter<OperationIdFilter>();
@@ -48,27 +109,31 @@ namespace EShop.Api
             services.AddSingleton(provider => new BlobStorageSettings(
                 new BlobServiceClient(AzureConnectionString()), "eshop"));
             services.AddSingleton<IImagesStorage, ImagesStorage>();
-            
+
             services.AddDbContext<MsSqlContext>(options =>
                 options.UseSqlServer(
-                    MssqlConnectionString(),
+                    MssqlConnectionStringDev(),
                     b => b.MigrationsAssembly("EShop.Api")));
 
             services.AddScoped<IValidator<CatalogItemContext>, CatalogItemValidator>();
             services.AddScoped<ICatalogItemsStorage, CatalogItemsStorage>();
             services.AddScoped<ICatalogItemsService, CatalogItemsService>();
+
+            services.AddScoped<IValidator<UserContext>, UserValidator>();
+            services.AddScoped<IIdentityStorage, IdentityStorage>();
+            services.AddScoped<IIdentityService, IdentityService>();
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, MsSqlContext context, ILogger<Startup> logger)
         {
-            try
+            /*try
             {
                 context.Database.Migrate();
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred with auto migrate the DB in Startup.cs.");
-            }
+            }*/
             
             
             if (env.IsDevelopment())
@@ -81,6 +146,9 @@ namespace EShop.Api
             }
 
             app.UseRouting();
+            
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

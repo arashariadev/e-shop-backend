@@ -32,7 +32,7 @@ namespace EShop.ApiTests.CatalogItems
             });
             
             // Act
-            var response = await client.DeleteAsync($"/api/Catalog/{id}/");
+            var response = await client.DeleteAsync($"/Catalog/{id}/");
             
             // Assert
             Assert.AreEqual(HttpStatusCode.NoContent, response.StatusCode);

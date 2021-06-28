@@ -13,6 +13,7 @@
 
     <ItemGroup>
         <PackageReference Include="Boberneprotiv.Domain" Version="0.0.3" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.7" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.7">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

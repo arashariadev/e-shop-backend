@@ -5,12 +5,9 @@ using EShop.Api.Models;
 using EShop.Domain.Catalog;
 using Moq;
 using NUnit.Framework;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using Domain;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
+
 
 namespace EShop.ApiTests.CatalogItems
 {
@@ -56,7 +53,7 @@ namespace EShop.ApiTests.CatalogItems
             });
             
             // Act 
-            var response = await client.PostAsync("/api/Catalog", input.AsJsonContent());
+            var response = await client.PostAsync("/Catalog", input.AsJsonContent());
             
             // Assert
             Assert.AreEqual(HttpStatusCode.Created, response.StatusCode);
@@ -93,7 +90,7 @@ namespace EShop.ApiTests.CatalogItems
             });
             
             // Act
-            var response = await client.PostAsync("/api/Catalog", input.AsJsonContent());
+            var response = await client.PostAsync("/Catalog", input.AsJsonContent());
             
             // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
