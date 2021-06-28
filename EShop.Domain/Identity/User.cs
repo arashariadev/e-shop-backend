@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace EShop.Domain.Identity
+﻿namespace EShop.Domain.Identity
 {
     public class User
     {

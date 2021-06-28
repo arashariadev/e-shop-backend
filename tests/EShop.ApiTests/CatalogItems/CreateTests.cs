@@ -5,12 +5,9 @@ using EShop.Api.Models;
 using EShop.Domain.Catalog;
 using Moq;
 using NUnit.Framework;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using Domain;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
+
 
 namespace EShop.ApiTests.CatalogItems
 {
