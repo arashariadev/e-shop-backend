@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Domain;
 using EShop.Api.Models;
+using EShop.Api.Models.CatalogItem;
 using EShop.Domain.Catalog;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;

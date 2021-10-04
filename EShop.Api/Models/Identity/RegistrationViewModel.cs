@@ -1,6 +1,6 @@
-﻿namespace EShop.Api.Models
+﻿namespace EShop.Api.Models.Identity
 {
-    public class RegistrationUserViewModel
+    public class RegistrationViewModel
     {
         public string FirstName { get; set; }
         

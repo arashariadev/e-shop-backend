@@ -6,6 +6,7 @@ using EShop.Domain.Catalog;
 using Moq;
 using NUnit.Framework;
 using System.Net;
+using EShop.Api.Models.CatalogItem;
 using Microsoft.Extensions.DependencyInjection;
 
 

@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Text.Json.Serialization;
 using Azure.Storage.Blobs;
 using EShop.Api.Helpers.OpenApi;
 using EShop.Azure;
+using EShop.Domain;
 using EShop.Domain.Azure;
 using EShop.Domain.Catalog;
 using EShop.Domain.Identity;
+using EShop.Domain.Profile;
 using EShop.MsSql;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -62,7 +63,7 @@ namespace EShop.Api
                 }
                 catch (Exception ex)
                 {
-                    
+                    Console.WriteLine(ex);
                 }
             });
 
@@ -112,7 +113,7 @@ namespace EShop.Api
 
             services.AddDbContext<MsSqlContext>(options =>
                 options.UseSqlServer(
-                    MssqlConnectionStringDev(),
+                    MssqlConnectionString(),
                     b => b.MigrationsAssembly("EShop.Api")));
 
             services.AddScoped<IValidator<CatalogItemContext>, CatalogItemValidator>();
@@ -122,18 +123,22 @@ namespace EShop.Api
             services.AddScoped<IValidator<UserContext>, UserValidator>();
             services.AddScoped<IIdentityStorage, IdentityStorage>();
             services.AddScoped<IIdentityService, IdentityService>();
+            
+            services.AddScoped<IValidator<ProfileContext>, ProfileValidator>();
+            services.AddScoped<IProfileStorage, ProfileStorage>();
+            services.AddScoped<IProfileService, ProfileService>();
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, MsSqlContext context, ILogger<Startup> logger)
         {
-            /*try
-            {
-                context.Database.Migrate();
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "An error occurred with auto migrate the DB in Startup.cs.");
-            }*/
+            // try
+            // {
+            //     context.Database.Migrate();
+            // }
+            // catch (Exception ex)
+            // {
+            //     logger.LogError(ex, "An error occurred with auto migrate the DB in Startup.cs.");
+            // }
             
             
             if (env.IsDevelopment())
@@ -150,25 +155,29 @@ namespace EShop.Api
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
         
         //Need to change. Use key vault or local user secrets to save azure connection string
         private string AzureConnectionString()
         {
-            return @"DefaultEndpointsProtocol=https;AccountName=ehsopblob;AccountKey=es;EndpointSuffix=core.windows.net";
+            return @"DefaultEndpointsProtocol=https;AccountName=ehsopblob;AccountKey=P4QxkwgxdjjbJ5mcgWy5w5RN77KHpDUyj2Iol+NEIe5hU6o9ELXyM1/yeX3pzj1ya5U+M+1PeXFkw8J3I+BvRQ==;EndpointSuffix=core.windows.net";
         }
 
         //Need to delete. Connection string for dev
         private string MssqlConnectionStringDev()
         {
-            return @"Server=DESKTOP-FQ83PKI;Database=EShop;Trusted_Connection=True;";
+            return @"Server=localhost;Database=master;User=SA;Password=Pass1234";
         }
         
         //Connection string for prod (check launch settings)
         private string MssqlConnectionString()
         {
-            return $"Server={Configuration["MSSQL_ADDRESS"]},{Configuration["MSSQL_PORT"]};Database=EShop;User={Configuration["MSSQL_USER"]};Password={Configuration["MSSQL_PASSWORD"]}";
+            var connectionString = $"Server={Configuration["MSSQL_ADDRESS"]},{Configuration["MSSQL_PORT"]};Database=EShop;User={Configuration["MSSQL_USER"]};Password={Configuration["MSSQL_PASSWORD"]}";
+            return connectionString;
         }
     }
 }

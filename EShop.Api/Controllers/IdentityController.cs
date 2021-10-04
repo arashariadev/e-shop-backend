@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using EShop.Api.Helpers;
-using EShop.Api.Models;
+using EShop.Api.Models.Identity;
 using EShop.Domain.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,11 +9,11 @@ namespace EShop.Api.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class IdentityController : ControllerBase
     {
         private readonly IIdentityService _identityService;
 
-        public UserController(IIdentityService identityService)
+        public IdentityController(IIdentityService identityService)
         {
             _identityService = identityService;
         }
@@ -27,7 +27,7 @@ namespace EShop.Api.Controllers
         [HttpPost("registration")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> RegistrationAsync([FromBody] RegistrationUserViewModel model)
+        public async Task<ActionResult> RegistrationAsync([FromBody] RegistrationViewModel model)
         {
             var result = await _identityService.RegistrationAsync(model.FirstName, model.LastName, model.PhoneNumber,
                 model.Email, model.Password, model.ConfirmPassword);

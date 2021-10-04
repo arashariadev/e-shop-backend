@@ -19,4 +19,8 @@
       <ProjectReference Include="..\..\EShop.Api\EShop.Api.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Identity" />
+    </ItemGroup>
+
 </Project>
