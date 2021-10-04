@@ -103,11 +103,10 @@ namespace EShop.Api
 
                 options.OperationFilter<OperationIdFilter>();
                 options.OperationFilter<AddResponseHeadersFilter>();
-
                 options.IncludeXmlComments(XmlPathProvider.XmlPath);
             });
 
-            services.AddSingleton(provider => new BlobStorageSettings(
+            services.AddSingleton(_ => new BlobStorageSettings(
                 new BlobServiceClient(AzureConnectionString()), "eshop"));
             services.AddSingleton<IImagesStorage, ImagesStorage>();
 
