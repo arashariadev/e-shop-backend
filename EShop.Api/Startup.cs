@@ -6,10 +6,12 @@ using EShop.Api.Helpers.OpenApi;
 using EShop.Azure;
 using EShop.Domain;
 using EShop.Domain.Azure;
+using EShop.Domain.Cache;
 using EShop.Domain.Catalog;
 using EShop.Domain.Identity;
 using EShop.Domain.Profile;
 using EShop.MsSql;
+using EShop.Redis;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,6 +22,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using StackExchange.Redis;
 using Swashbuckle.AspNetCore.Filters;
 
 namespace EShop.Api
@@ -114,6 +117,11 @@ namespace EShop.Api
                 options.UseSqlServer(
                     MssqlConnectionStringDev(),
                     b => b.MigrationsAssembly("EShop.Api")));
+            
+            services.AddSingleton<IConnectionMultiplexer>(_ =>
+                ConnectionMultiplexer.Connect(Configuration.GetValue<string>("REDIS_CONNECTION")));
+
+            services.AddSingleton<ICacheIdentityStorage, CacheIdentityStorage>();
 
             services.AddScoped<IValidator<CatalogItemContext>, CatalogItemValidator>();
             services.AddScoped<ICatalogItemsStorage, CatalogItemsStorage>();
@@ -173,10 +181,11 @@ namespace EShop.Api
         }
         
         //Connection string for prod (check launch settings)
-        private string MsSqlConnectionString()
-        {
-            var connectionString = $"Server={Configuration["MSSQL_ADDRESS"]};Database={Configuration["MSSQL_CATALOG"]};User={Configuration["MSSQL_USER"]};Password={Configuration["MSSQL_PASSWORD"]};";
-            return connectionString;
-        }
+        //TODO implement this 
+        // private string MsSqlConnectionString()
+        // {
+        //     var connectionString = $"Server={Configuration["MSSQL_ADDRESS"]};Database={Configuration["MSSQL_CATALOG"]};User={Configuration["MSSQL_USER"]};Password={Configuration["MSSQL_PASSWORD"]};";
+        //     return connectionString;
+        // }
     }
 }

@@ -18,6 +18,8 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="StackExchange.Redis" Version="2.2.88" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
         <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.2" />
     </ItemGroup>
@@ -25,5 +27,6 @@
     <ItemGroup>
       <ProjectReference Include="..\Infrastructure\EShop.Azure\EShop.Azure.csproj" />
       <ProjectReference Include="..\Infrastructure\EShop.MsSql\EShop.MsSql.csproj" />
+      <ProjectReference Include="..\Infrastructure\EShop.Redis\EShop.Redis.csproj" />
     </ItemGroup>
 </Project>
