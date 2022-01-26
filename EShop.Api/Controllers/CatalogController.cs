@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using EShop.Api.Helpers;
 using EShop.Api.Models;
+using EShop.Api.Models.CatalogItem;
 using EShop.Domain.Catalog;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,7 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace EShop.Api.Controllers
 {
-    [Route("[controller]")]
+    [Route("[controller]/item")]
     [ApiController]
     public class CatalogController : ControllerBase
     {
@@ -142,7 +143,7 @@ namespace EShop.Api.Controllers
         /// <param name="id">item id</param>
         /// <response code="200">Return item with image url</response>
         /// <response code="400">Item not found or file is null</response>
-        [HttpPost("upload/{id:guid}")]
+        [HttpPost("{id:guid}/image/upload")]
         [RequestSizeLimit(31457280)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -174,7 +175,7 @@ namespace EShop.Api.Controllers
         /// <param name="id">Publication id</param>
         /// <response code="200">Image url now is null</response>
         /// <response code="404">Publication not found or images url is null</response>
-        [HttpDelete("delete/{id:guid}")]
+        [HttpDelete("{id:guid}/image/delete")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteImageAsync([FromRoute] Guid id)

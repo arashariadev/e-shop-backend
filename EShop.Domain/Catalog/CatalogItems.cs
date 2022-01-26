@@ -30,7 +30,8 @@ namespace EShop.Domain.Catalog
         
         public int AvailableStock { get; private set; }
 
-        public CatalogItems Update(string name, string description, decimal price, string pictureFileName, string pictureUri, int availableStock)
+        public void Update(string name, string description, decimal price, string pictureFileName, string pictureUri,
+            int availableStock)
         {
             Name = name;
             Description = description;
@@ -38,8 +39,6 @@ namespace EShop.Domain.Catalog
             PictureFileName = pictureFileName;
             PictureUri = pictureUri;
             AvailableStock = availableStock;
-
-            return this;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿{
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "E_Shop": {
+    "ES_hop": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
@@ -9,9 +9,12 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "MSSQL_ADDRESS": "localhost",
         "MSSQL_PORT": "1433",
-        "MSSQL_USER": "SA",
-        "MSSQL_PASSWORD": "Pass1234",
-        "Secret": "DzNnSK6fqCiAbVmoAjWgIhEiPTkNk5g4"
+        "MSSQL_CATALOG": "sql1",
+        "MSSQL_TRUSTED_CONNECTION": "true",
+        "MSSQL_USER": "sa",
+        "MSSQL_PASSWORD": "!234Qwer",
+        "SECRET": "DzNnSK6fqCiAbVmoAjWgIhEiPTkNk5g4",
+        "REDIS_CONNECTION": "localhost:6379"
       },
       "applicationUrl": "https://localhost:5001;http://localhost:5000"
     }

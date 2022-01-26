@@ -1,4 +1,4 @@
-﻿namespace EShop.Api.Models
+﻿namespace EShop.Api.Models.Identity
 {
     public class LoginViewModel
     {

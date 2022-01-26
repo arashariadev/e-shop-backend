@@ -4,11 +4,6 @@ using Domain;
 
 namespace EShop.Domain.Catalog
 {
-    public interface IValidator<in T>
-    {
-        DomainResult Validate(T param);
-    }
-
     public class CatalogItemValidator : IValidator<CatalogItemContext>
     {
         public DomainResult Validate(CatalogItemContext param)

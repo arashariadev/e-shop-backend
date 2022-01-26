@@ -6,7 +6,7 @@ namespace EShop.Domain.Identity
 {
     public interface IIdentityService
     {
-        Task<(DomainResult, string)> LoginAsync(string email, string password);
+        Task<(DomainResult, LoginResult)> LoginAsync(string email, string password);
 
         Task<DomainResult> RegistrationAsync(
             string firstName,
@@ -15,6 +15,8 @@ namespace EShop.Domain.Identity
             string email,
             string password,
             string confirmationPassword);
+
+        Task<(DomainResult, LoginResult)> RefreshTokenAsync(string refreshToken);
     }
 
     public class IdentityService : IIdentityService
@@ -28,11 +30,13 @@ namespace EShop.Domain.Identity
             _validator = validator;
         }
 
-        public async Task<(DomainResult, string)> LoginAsync(string email, string password)
+        public async Task<(DomainResult, LoginResult)> LoginAsync(string email, string password)
         {
-            var token = await _identityStorage.Login(email, password);
+            var loginResult = await _identityStorage.Login(email, password);
 
-            return token == null ? (DomainResult.Error("Wrong login/password combination"), null) : (DomainResult.Success() , token);
+            return loginResult == null 
+                ? (DomainResult.Error("Wrong login/password combination"), null) 
+                : (DomainResult.Success() , loginResult);
         }
 
         public async Task<DomainResult> RegistrationAsync(
@@ -53,6 +57,15 @@ namespace EShop.Domain.Identity
             await _identityStorage.Registration(new User(firstName, lastName, phoneNumber, email, password, confirmationPassword));
             
             return DomainResult.Success();
+        }
+
+        public async Task<(DomainResult, LoginResult)> RefreshTokenAsync(string refreshToken)
+        {
+            var result = await _identityStorage.RefreshToken(refreshToken);
+
+            return result == null
+                ? (DomainResult.Error("Smt went wrong! Login again, please"), default)
+                : (DomainResult.Success(), result);
         }
     }
 }

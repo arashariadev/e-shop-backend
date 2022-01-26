@@ -1,6 +1,6 @@
-﻿namespace EShop.Api.Models
+﻿namespace EShop.Api.Models.CatalogItem
 {
-    public class UpdateItemViewModel
+    public class CreateItemViewModel
     {
         public string Name { get; set; }
         
