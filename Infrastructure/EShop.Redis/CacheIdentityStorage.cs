@@ -1,5 +1,6 @@
 ﻿using EShop.Domain.Cache;
 using EShop.Domain.Identity;
+using EShop.Domain.Identity.JWT;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 
@@ -31,6 +32,6 @@ public class CacheIdentityStorage : ICacheIdentityStorage
 
         var jsonValue = JsonConvert.SerializeObject(value);
         
-        var result = await db.StringSetAsync(key, jsonValue);
+        await db.StringSetAsync(key, jsonValue);
     }
 }

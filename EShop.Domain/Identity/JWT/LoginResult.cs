@@ -1,4 +1,4 @@
-﻿namespace EShop.Domain.Identity;
+﻿namespace EShop.Domain.Identity.JWT;
 
 public class LoginResult
 {

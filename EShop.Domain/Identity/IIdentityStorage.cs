@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using EShop.Domain.Cache;
+using EShop.Domain.Identity.JWT;
 using Microsoft.AspNetCore.Identity;
 
 namespace EShop.Domain.Identity
