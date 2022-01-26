@@ -16,6 +16,7 @@ using EShop.Redis;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -122,7 +123,10 @@ namespace EShop.Api
             services.AddSingleton<IConnectionMultiplexer>(_ =>
                 ConnectionMultiplexer.Connect(Configuration.GetValue<string>("REDIS_CONNECTION")));
 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddSingleton<ICacheIdentityStorage, CacheIdentityStorage>();
+            services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
 
             services.AddScoped<IValidator<CatalogItemContext>, CatalogItemValidator>();
             services.AddScoped<ICatalogItemsStorage, CatalogItemsStorage>();

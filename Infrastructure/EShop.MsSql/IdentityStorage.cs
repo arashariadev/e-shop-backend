@@ -34,7 +34,7 @@ namespace EShop.MsSql
                 if (await _userManager.CheckPasswordAsync(existUser, password))
                 {
                     var jwtToken = GenerateJwtToken(existUser.Id);
-                    var refreshToken = GenerateRefreshToken(jwtToken, existUser.Id);
+                    var refreshToken = GenerateRefreshToken(existUser.Id);
 
                     var loginResult = new LoginResult()
                     {
@@ -82,8 +82,6 @@ namespace EShop.MsSql
 
             var newJwtToken = GenerateJwtToken(existUserSession.Id);
 
-            existUserSession.LinkedJwtToken = newJwtToken;
-
             await _cacheStorage.SetCacheValueAsync(existUserSession.Token, existUserSession);
 
             var result = new LoginResult()
@@ -103,8 +101,9 @@ namespace EShop.MsSql
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, id),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim("id", id)
+                    
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -116,7 +115,7 @@ namespace EShop.MsSql
             return token;
         }
 
-        private static RefreshToken GenerateRefreshToken(string jwtToken, string userId)
+        private static RefreshToken GenerateRefreshToken(string userId)
         {
             using var rngCryptoServiceProvider = RandomNumberGenerator.Create();
         
@@ -128,7 +127,6 @@ namespace EShop.MsSql
                 Token = Convert.ToBase64String(randomBytes),
                 ExpirationTime = DateTimeOffset.UtcNow.AddDays(1),
                 CreatedTime = DateTimeOffset.UtcNow,
-                LinkedJwtToken = jwtToken,
                 Id = userId
             };
         }

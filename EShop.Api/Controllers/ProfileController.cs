@@ -11,9 +11,9 @@ using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
 namespace EShop.Api.Controllers
 {
-    [Authorize]
-    [Route("[controller]")]
     [ApiController]
+    [Route("[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ProfileController : ControllerBase
     {
         private readonly IProfileService _profileService;
