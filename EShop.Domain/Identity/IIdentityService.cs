@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Domain;
 using EShop.Domain.Catalog;
+using EShop.Domain.Identity.JWT;
 
 namespace EShop.Domain.Identity
 {

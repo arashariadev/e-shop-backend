@@ -9,6 +9,7 @@ using EShop.Domain.Azure;
 using EShop.Domain.Cache;
 using EShop.Domain.Catalog;
 using EShop.Domain.Identity;
+using EShop.Domain.Identity.JWT;
 using EShop.Domain.Profile;
 using EShop.MsSql;
 using EShop.Redis;

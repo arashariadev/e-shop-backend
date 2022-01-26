@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EShop.Domain.Cache;
 using EShop.Domain.Identity;
+using EShop.Domain.Identity.JWT;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 

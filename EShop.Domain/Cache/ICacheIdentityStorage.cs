@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using EShop.Domain.Identity;
+using EShop.Domain.Identity.JWT;
 
 namespace EShop.Domain.Cache;
 

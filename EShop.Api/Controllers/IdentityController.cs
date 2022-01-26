@@ -3,6 +3,7 @@ using EShop.Api.Helpers;
 using EShop.Api.Models.Identity;
 using EShop.Domain.Cache;
 using EShop.Domain.Identity;
+using EShop.Domain.Identity.JWT;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -84,8 +85,8 @@ namespace EShop.Api.Controllers
         }
 
         //TODO get cached value by key isnt work
-        [HttpGet("check-cache/{key}")]
-        public async Task<ActionResult> CheckCacheAsync([FromRoute] string key)
+        [HttpGet("check-cache")]
+        public async Task<ActionResult> CheckCacheAsync([FromQuery] string key)
         {
             return Ok(await _cacheIdentity.GetCacheValueAsync(key));
         }
