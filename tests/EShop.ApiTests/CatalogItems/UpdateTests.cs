@@ -11,9 +11,9 @@ using NUnit.Framework;
 
 namespace EShop.ApiTests.CatalogItems
 {
-    [TestFixture]
-    public class UpdateTests
-    {
+    // [TestFixture]
+    // public class UpdateTests
+    // {
         // [Test]
         // public async Task Update_NoContent()
         // {
@@ -131,5 +131,5 @@ namespace EShop.ApiTests.CatalogItems
         //     // Assert
         //     Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
         // }
-    }
+    // }
 }

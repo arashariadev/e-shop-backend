@@ -12,9 +12,9 @@ using NUnit.Framework;
 
 namespace EShop.ApiTests.Profile
 {
-    [TestFixture]
-    public class UpdateTests
-    {
+    //[TestFixture]
+    //public class UpdateTests
+    //{
         // [Test]
         // public async Task Update_Successfully()
         // {
@@ -53,5 +53,5 @@ namespace EShop.ApiTests.Profile
         //     //Assert
         //     Assert.AreEqual(HttpStatusCode.NoContent, response.StatusCode);
         // }
-    }
+    //}
 }

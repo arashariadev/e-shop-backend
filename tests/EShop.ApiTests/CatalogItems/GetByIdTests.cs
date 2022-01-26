@@ -8,9 +8,9 @@ using NUnit.Framework;
 
 namespace EShop.ApiTests.CatalogItems
 {
-    [TestFixture]
-    public class GetByIdTests
-    {
+    // [TestFixture]
+    // public class GetByIdTests
+    // {
         // [Test]
         // public async Task GetById_Ok()
         // {
@@ -61,5 +61,5 @@ namespace EShop.ApiTests.CatalogItems
         //     // Assert
         //     Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
         // }
-    }
+    // }
 }

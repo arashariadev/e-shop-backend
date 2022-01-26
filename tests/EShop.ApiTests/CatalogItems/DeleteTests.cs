@@ -8,9 +8,9 @@ using NUnit.Framework;
 
 namespace EShop.ApiTests.CatalogItems
 {
-    [TestFixture]
-    public class DeleteTests
-    {
+    // [TestFixture]
+    // public class DeleteTests
+    // {
         // [Test]
         // public async Task Delete_NoContent()
         // {
@@ -61,5 +61,5 @@ namespace EShop.ApiTests.CatalogItems
         //     // Assert
         //     Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
         // }
-    }
+    // }
 }

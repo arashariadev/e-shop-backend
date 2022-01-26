@@ -10,9 +10,9 @@ using NUnit.Framework;
 
 namespace EShop.ApiTests.Profile
 {
-    [TestFixture]
-    public class GetByIdTests
-    {
+    //[TestFixture]
+    //public class GetByIdTests
+    //{
         // [Test]
         // public async Task User_Exist()
         // {
@@ -37,5 +37,5 @@ namespace EShop.ApiTests.Profile
         //     //Assert
         //     Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         // }
-    }
+    //}
 }

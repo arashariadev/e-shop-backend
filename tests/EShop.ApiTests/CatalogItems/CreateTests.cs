@@ -11,9 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace EShop.ApiTests.CatalogItems
 {
-    [TestFixture]
-    public class CreateTests
-    {
+    // [TestFixture]
+    // public class CreateTests
+    // {
         //TODO fix api tests
         // [Test]
         // public async Task CreateItem_Created()
@@ -96,5 +96,5 @@ namespace EShop.ApiTests.CatalogItems
         //     // Assert
         //     Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
         // }
-    }
+   // }
 }
