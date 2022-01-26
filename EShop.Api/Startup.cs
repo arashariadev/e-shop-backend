@@ -112,7 +112,7 @@ namespace EShop.Api
 
             services.AddDbContext<MsSqlContext>(options =>
                 options.UseSqlServer(
-                    MssqlConnectionString(),
+                    MssqlConnectionStringDev(),
                     b => b.MigrationsAssembly("EShop.Api")));
 
             services.AddScoped<IValidator<CatalogItemContext>, CatalogItemValidator>();
@@ -169,13 +169,13 @@ namespace EShop.Api
         //Need to delete. Connection string for dev
         private string MssqlConnectionStringDev()
         {
-            return @"Server=localhost;Database=master;User=SA;Password=Pass1234";
+            return @"Server=localhost;Database=sql1;User=SA;Password=!234Qwer";
         }
         
         //Connection string for prod (check launch settings)
-        private string MssqlConnectionString()
+        private string MsSqlConnectionString()
         {
-            var connectionString = $"Server={Configuration["MSSQL_ADDRESS"]},{Configuration["MSSQL_PORT"]};Database=EShop;User={Configuration["MSSQL_USER"]};Password={Configuration["MSSQL_PASSWORD"]}";
+            var connectionString = $"Server={Configuration["MSSQL_ADDRESS"]};Database={Configuration["MSSQL_CATALOG"]};User={Configuration["MSSQL_USER"]};Password={Configuration["MSSQL_PASSWORD"]};";
             return connectionString;
         }
     }

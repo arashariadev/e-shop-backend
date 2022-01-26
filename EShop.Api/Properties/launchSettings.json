@@ -9,8 +9,10 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "MSSQL_ADDRESS": "localhost",
         "MSSQL_PORT": "1433",
+        "MSSQL_CATALOG": "sql1",
+        "MSSQL_TRUSTED_CONNECTION": "true",
         "MSSQL_USER": "sa",
-        "MSSQL_PASSWORD": "Pass1234",
+        "MSSQL_PASSWORD": "!234Qwer",
         "Secret": "DzNnSK6fqCiAbVmoAjWgIhEiPTkNk5g4"
       },
       "applicationUrl": "https://localhost:5001;http://localhost:5000"
