@@ -34,7 +34,7 @@ namespace EShop.Api.Controllers
         public async Task<ActionResult> RegistrationAsync([FromBody] RegistrationViewModel model)
         {
             var result = await _identityService.RegistrationAsync(model.FirstName, model.LastName, model.PhoneNumber,
-                model.Email, model.ReceiveSpam, model.Password, model.ConfirmPassword);
+                model.Email, model.Password, model.ConfirmPassword);
 
             if (!result.Successed)
             {
