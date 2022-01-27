@@ -72,7 +72,7 @@ namespace EShop.Api.Controllers
             }
 
             var result = await _profileService.UpdateProfileAsync(_currentUserProvider.UserId, model.FirstName,
-                model.LastName, model.PhoneNumber);
+                model.LastName, model.PhoneNumber, model.ReceiveSpam);
 
             if (result.Successed)
             {

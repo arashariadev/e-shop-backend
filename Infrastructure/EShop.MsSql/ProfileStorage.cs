@@ -28,6 +28,7 @@ namespace EShop.MsSql
             profile.FirstName = userProfile.FirstName;
             profile.LastName = userProfile.LastName;
             profile.PhoneNumber = userProfile.PhoneNumber;
+            profile.ReceiveSpam = userProfile.ReceiveSpam;
 
             _context.ApplicationUsers.Update(profile);
             await _context.SaveChangesAsync();
@@ -40,7 +41,8 @@ namespace EShop.MsSql
                 entity.Email,
                 entity.FirstName,
                 entity.LastName,
-                entity.PhoneNumber);
+                entity.PhoneNumber,
+                entity.ReceiveSpam);
         }
     }
 }
