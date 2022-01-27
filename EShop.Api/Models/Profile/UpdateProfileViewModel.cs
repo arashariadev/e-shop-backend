@@ -2,12 +2,10 @@
 {
     public class UpdateProfileViewModel
     {
-        public string FirstName { get; }
+        public string FirstName { get; set; }
         
-        public string LastName { get; }
- 
-        public bool ReceiveSpam { get; }
-        
+        public string LastName { get; set; }
+
         public string PhoneNumber { get; set; }
         
         public bool ReceiveMails { get; set; }

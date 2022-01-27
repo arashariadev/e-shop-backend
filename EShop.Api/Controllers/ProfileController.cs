@@ -52,17 +52,12 @@ namespace EShop.Api.Controllers
         /// <response code="204">Profile successfully updated</response>
         /// <response code="404">Nice try</response>
         /// <response code="400">Problem results</response>
-        [HttpPut("{userId}")]
+        [HttpPut]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<UserProfile>> UpdateProfileAsync([FromRoute] string userId, [FromBody] UpdateProfileViewModel model)
+        public async Task<ActionResult<UserProfile>> UpdateProfileAsync([FromBody] UpdateProfileViewModel model)
         {
-            if (userId != _currentUserProvider.UserId)
-            {
-                return BadRequest();
-            }
-            
             var profile = await _profileService.FindProfileByIdAsync(_currentUserProvider.UserId);
 
             if (profile == null)
@@ -71,7 +66,7 @@ namespace EShop.Api.Controllers
             }
 
             var result = await _profileService.UpdateProfileAsync(_currentUserProvider.UserId, model.FirstName,
-                model.LastName, model.PhoneNumber, model.ReceiveSpam);
+                model.LastName, model.PhoneNumber, model.ReceiveMails);
                 if (result.Successed)
             {
                 return NoContent();
