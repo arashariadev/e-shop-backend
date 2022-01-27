@@ -14,6 +14,7 @@ namespace EShop.Domain.Identity
             string lastName,
             string phoneNumber,
             string email,
+            bool receiveSpam,
             string password,
             string confirmationPassword);
 
@@ -45,6 +46,7 @@ namespace EShop.Domain.Identity
             string lastName,
             string phoneNumber,
             string email,
+            bool receiveSpam,
             string password,
             string confirmationPassword)
         {
@@ -55,7 +57,7 @@ namespace EShop.Domain.Identity
                 return result;
             }
 
-            await _identityStorage.Registration(new User(firstName, lastName, phoneNumber, email, password, confirmationPassword));
+            await _identityStorage.Registration(new User(firstName, lastName, phoneNumber, email, receiveSpam, password, confirmationPassword));
             
             return DomainResult.Success();
         }
