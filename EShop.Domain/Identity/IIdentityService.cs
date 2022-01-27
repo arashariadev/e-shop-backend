@@ -14,6 +14,7 @@ namespace EShop.Domain.Identity
             string lastName,
             string phoneNumber,
             string email,
+            bool receiveMails,
             string password,
             string confirmationPassword);
 
@@ -45,6 +46,7 @@ namespace EShop.Domain.Identity
             string lastName,
             string phoneNumber,
             string email,
+            bool receiveMails,
             string password,
             string confirmationPassword)
         {

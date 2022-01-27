@@ -65,7 +65,8 @@ namespace EShop.MsSql
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     PhoneNumber = user.PhoneNumber,
-                    Email = user.Email
+                    Email = user.Email,
+                    ReceiveMails = user.ReceiveMails
                 }, user.Password);
 
             return !result.Succeeded ? IdentityResult.Failed() : IdentityResult.Success;

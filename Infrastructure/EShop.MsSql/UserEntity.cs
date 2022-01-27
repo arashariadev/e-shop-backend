@@ -13,5 +13,8 @@ namespace EShop.MsSql
         [Column(TypeName = "nvarchar(75)")]
         [Required]
         public string LastName { get; set; }
+        
+        [Required]
+        public bool ReceiveMails { get; set; }
     }
 }

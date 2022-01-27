@@ -152,13 +152,13 @@ namespace EShop.Api
             //     logger.LogError(ex, "An error occurred with auto migrate the DB in Startup.cs.");
             // }
             
-            
             if (env.IsDevelopment())
             {
                 app.UseSwagger()
                     .UseSwaggerUI(config =>
                     {
                         config.SwaggerEndpoint("/swagger/v1/swagger.json", "EShop.Api V1");
+                        config.DisplayRequestDuration();
                     });
             }
 

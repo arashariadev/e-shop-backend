@@ -40,7 +40,8 @@ namespace EShop.MsSql
                 entity.Email,
                 entity.FirstName,
                 entity.LastName,
-                entity.PhoneNumber);
+                entity.PhoneNumber,
+                entity.ReceiveMails);
         }
     }
 }
