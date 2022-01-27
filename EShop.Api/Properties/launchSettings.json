@@ -14,7 +14,16 @@
         "MSSQL_USER": "sa",
         "MSSQL_PASSWORD": "!234Qwer",
         "SECRET": "DzNnSK6fqCiAbVmoAjWgIhEiPTkNk5g4",
-        "REDIS_CONNECTION": "localhost:6379"
+        "REDIS_CONNECTION": "localhost:6379",
+        "SMTP_EMAIL_ID": "e.shop.api.ua@gmail.com",
+        "SMTP_NAME": "E-Shop Support",
+        "SMTP_PASSWORD": "JOpa3800",
+        "SMTP_HOST": "smtp.gmail.com",
+        "SMTP_PORT": "465",
+        "SMTP_USE_SSL": "true"
+      },
+      "smtpsettings": {
+        
       },
       "applicationUrl": "https://localhost:5001;http://localhost:5000"
     }

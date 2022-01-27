@@ -11,6 +11,7 @@ using EShop.Domain.Catalog;
 using EShop.Domain.Identity;
 using EShop.Domain.Identity.JWT;
 using EShop.Domain.Profile;
+using EShop.Domain.Smtp;
 using EShop.MsSql;
 using EShop.Redis;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -45,6 +46,18 @@ namespace EShop.Api
             var jwtSettings = new JwtSettings();
             Configuration.Bind(nameof(jwtSettings), jwtSettings);
             services.AddSingleton(jwtSettings);
+
+            var smtpSettings = new SmtpSettings()
+            {
+                EmailId = Configuration["SMTP_EMAiL_ID"],
+                Host = Configuration["SMTP_HOST"],
+                Name = Configuration["SMTP_HOST"],
+                Password = Configuration["SMTP_PASSWORD"],
+                Port = int.Parse(Configuration["SMTP_PORT"]),
+                UseSsl = bool.Parse(Configuration["SMTP_USE_SSL"])
+            };
+            
+            services.AddSingleton(smtpSettings);
 
             services.AddAuthentication(x =>
             {
@@ -111,6 +124,7 @@ namespace EShop.Api
                 options.IncludeXmlComments(XmlPathProvider.XmlPath);
             });
 
+            //Paas
             services.AddSingleton(_ => new BlobStorageSettings(
                 new BlobServiceClient(AzureConnectionString()), "eshop"));
             services.AddSingleton<IImagesStorage, ImagesStorage>();
@@ -122,6 +136,8 @@ namespace EShop.Api
             
             services.AddSingleton<IConnectionMultiplexer>(_ =>
                 ConnectionMultiplexer.Connect(Configuration.GetValue<string>("REDIS_CONNECTION")));
+
+            services.AddScoped<ISmtpService, SmtpService>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

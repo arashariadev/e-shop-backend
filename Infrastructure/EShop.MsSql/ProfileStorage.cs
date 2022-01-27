@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using EShop.Domain.Identity;
 using EShop.Domain.Profile;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,6 +27,7 @@ namespace EShop.MsSql
             profile.FirstName = userProfile.FirstName;
             profile.LastName = userProfile.LastName;
             profile.PhoneNumber = userProfile.PhoneNumber;
+            profile.ReceiveMails = userProfile.ReceiveMails;
 
             _context.ApplicationUsers.Update(profile);
             await _context.SaveChangesAsync();
