@@ -6,7 +6,7 @@ namespace EShop.Domain.Smtp;
 
 public interface ISmtpService
 {
-    Task<bool> SentToAll(IEnumerable<EmailData> email);
+    Task SendToAll(IEnumerable<string> emailsTo, string subject, string body);
 
-    Task<bool> SentToOne(string emailTo, string emailToName, string subject, string body);
+    Task<bool> SendToOne(string emailTo, string emailToName, string subject, string body);
 }

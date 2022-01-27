@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MimeKit;
@@ -15,12 +16,45 @@ public class SmtpService : ISmtpService
         _smtpSettings = smtpSettings;
     }
 
-    public Task<bool> SentToAll(IEnumerable<EmailData> email)
+    public async Task SendToAll(IEnumerable<string> emailsTo, string subject, string body)
     {
-        throw new System.NotImplementedException();
+        try
+        {
+            foreach (var emailTo in emailsTo)
+            {
+                var emailMessage = new MimeMessage();
+
+                var emailFrom = new MailboxAddress(_smtpSettings.Name, _smtpSettings.EmailId);
+                emailMessage.From.Add(emailFrom);
+
+                var receiver = new MailboxAddress(default, emailTo);
+                emailMessage.To.Add(receiver);
+
+                emailMessage.Subject = subject;
+
+                var emailBodyBuilder = new BodyBuilder
+                {
+                    TextBody = body
+                };
+
+                emailMessage.Body = emailBodyBuilder.ToMessageBody();
+
+                var smtpClient = new SmtpClient();
+                await smtpClient.ConnectAsync(_smtpSettings.Host, _smtpSettings.Port, _smtpSettings.UseSsl);
+                await smtpClient.AuthenticateAsync(_smtpSettings.EmailId, _smtpSettings.Password);
+                await smtpClient.SendAsync(emailMessage);
+                await smtpClient.DisconnectAsync(true);
+                smtpClient.Dispose();
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
-    public async Task<bool> SentToOne(string emailTo, string emailToName, string subject, string body)
+    public async Task<bool> SendToOne(string emailTo, string emailToName, string subject, string body)
     {
         try
         {
