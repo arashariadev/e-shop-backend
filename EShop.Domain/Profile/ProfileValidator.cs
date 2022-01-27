@@ -27,7 +27,7 @@ namespace EShop.Domain.Profile
                 results.Add(new DomainError($"{nameof(lastName)} cannot be null, empty or more than 150 chars"));
             }
             
-            if (string.IsNullOrEmpty(phoneNumber))
+            if (string.IsNullOrEmpty(phoneNumber) || phoneNumber.Length < 8 || phoneNumber.Length > 13)
             {
                 results.Add(new DomainError($"{nameof(phoneNumber)} cannot be empty"));
             }

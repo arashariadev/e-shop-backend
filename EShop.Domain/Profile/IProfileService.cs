@@ -7,8 +7,8 @@ namespace EShop.Domain.Profile
     public interface IProfileService
     {
         Task<UserProfile> FindProfileByIdAsync(string id);
-
-        Task<DomainResult> UpdateProfileAsync(string id, string firstName, string lastName, string phoneNumber, bool receiveSpam);
+        
+        Task<DomainResult> UpdateProfileAsync(string id, string firstName, string lastName, string phoneNumber, bool receiveMails);
     }
 
     public class ProfileService : IProfileService
@@ -26,8 +26,8 @@ namespace EShop.Domain.Profile
         {
             return await _profileStorage.GetProfileAsync(id);
         }
-
-        public async Task<DomainResult> UpdateProfileAsync(string id, string firstName, string lastName, string phoneNumber, bool receiveSpam)
+        
+        public async Task<DomainResult> UpdateProfileAsync(string id, string firstName, string lastName, string phoneNumber, bool receiveMails)
         {
             var validate = _validator.Validate(new ProfileContext(firstName, lastName, phoneNumber));
             if (!validate.Successed)
@@ -41,7 +41,8 @@ namespace EShop.Domain.Profile
                 return DomainResult.Error("item not found");
             }
             
-            profile.Update(firstName, lastName, phoneNumber, receiveSpam);
+            profile.Update(firstName, lastName, phoneNumber, receiveMails);
+            
             await _profileStorage.UpdateProfileAsync(id, profile);
 
             return DomainResult.Success();

@@ -168,7 +168,6 @@ namespace EShop.Api
             //     logger.LogError(ex, "An error occurred with auto migrate the DB in Startup.cs.");
             // }
             
-            
             if (env.IsDevelopment())
             {
                 app.UseSwagger()

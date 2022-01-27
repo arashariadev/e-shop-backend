@@ -20,6 +20,8 @@
         
         public string Email { get; private set; }
         
+        public bool ReceiveMails { get; private set; }
+        
         public string Password { get; private set; }
         
         public string ConfirmationPassword { get; private set; }

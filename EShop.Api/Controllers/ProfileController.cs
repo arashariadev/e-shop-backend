@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
 namespace EShop.Api.Controllers
 {
@@ -73,8 +72,7 @@ namespace EShop.Api.Controllers
 
             var result = await _profileService.UpdateProfileAsync(_currentUserProvider.UserId, model.FirstName,
                 model.LastName, model.PhoneNumber, model.ReceiveSpam);
-
-            if (result.Successed)
+                if (result.Successed)
             {
                 return NoContent();
             }

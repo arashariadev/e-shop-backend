@@ -2,14 +2,14 @@
 {
     public class UserProfile
     {
-        public UserProfile(string id, string email, string firstName, string lastName, string phoneNumber, bool receiveSpam)
+        public UserProfile(string id, string email, string firstName, string lastName, string phoneNumber, bool receiveMails)
         {
             Id = id;
             Email = email;
             FirstName = firstName;
             LastName = lastName;
             PhoneNumber = phoneNumber;
-            ReceiveSpam = receiveSpam;
+            ReceiveMails = receiveMails;
         }
         
         public string Id { get; }
@@ -22,14 +22,14 @@
         
         public string PhoneNumber { get; private set; }
         
-        public bool ReceiveSpam { get; private set; }
+        public bool ReceiveMails { get; private set; }
 
-        public void Update(string firstName, string lastName, string phoneNumber, bool receiveSpam)
+        public void Update(string firstName, string lastName, string phoneNumber, bool receiveMails)
         {
             FirstName = firstName;
             LastName = lastName;
             PhoneNumber = phoneNumber;
-            ReceiveSpam = receiveSpam;
+            ReceiveMails = receiveMails;
         }
     }
 }

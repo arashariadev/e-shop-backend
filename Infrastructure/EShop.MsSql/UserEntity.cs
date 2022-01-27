@@ -14,6 +14,7 @@ namespace EShop.MsSql
         [Required]
         public string LastName { get; set; }
         
-        public bool ReceiveSpam { get; set; }
+        [Required]
+        public bool ReceiveMails { get; set; }
     }
 }
