@@ -32,7 +32,7 @@ namespace EShop.Api.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<UserProfile>> GetProfileByIdAsync()
+        public async Task<ActionResult<UserProfile>> GetProfileAsync()
         {
             var profile = await _profileService.FindProfileByIdAsync(_currentUserProvider.UserId);
 

@@ -2,12 +2,13 @@
 {
     public class User
     {
-        public User(string firstName, string lastName, string phoneNumber, string email, string password, string confirmationPassword)
+        public User(string firstName, string lastName, string phoneNumber, string email, bool receiveMails, string password, string confirmationPassword)
         {
             FirstName = firstName;
             LastName = lastName;
             PhoneNumber = phoneNumber;
             Email = email;
+            ReceiveMails = receiveMails;
             Password = password;
             ConfirmationPassword = confirmationPassword;
         }

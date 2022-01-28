@@ -26,7 +26,7 @@ namespace EShop.Api.Controllers
         /// Registration
         /// </summary>
         /// <param name="model">Registration model</param>
-        /// <response code="201">User account successfully created</response>
+        /// <response code="200">User account successfully created</response>
         /// <response code="400">Validation failed</response>
         [HttpPost("registration")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -48,7 +48,7 @@ namespace EShop.Api.Controllers
         /// Login
         /// </summary>
         /// <param name="model">Login model</param>
-        /// <response code="201">Successful login</response>
+        /// <response code="200">Successful login</response>
         /// <response code="400">Wrong email/password combination</response>
         [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -69,7 +69,7 @@ namespace EShop.Api.Controllers
         /// Refresh jwt token
         /// </summary>
         /// <param name="model">refresh token</param>
-        /// <response code="201">Successful refreshed</response>
+        /// <response code="200">Successful refreshed</response>
         /// <response code="400">Smt went wrong</response>
         [HttpPost("refresh-token")]
         public async Task<ActionResult<LoginResult>> RefreshTokenAsync([FromBody] RefreshViewModel model)
@@ -79,6 +79,45 @@ namespace EShop.Api.Controllers
             if (!result.Successed)
             {
                 return BadRequest(result.ToProblemDetails());
+            }
+
+            return Ok(loginResult);
+        }
+
+        /// <summary>
+        /// Login by facebook access token
+        /// </summary>
+        /// <param name="model">Access token</param>
+        /// <response code="200">Successful login</response>
+        /// <response code="400">Smt went wrong</response>
+        //TODO need to test this endpoint
+        [HttpPost("facebook-login")]
+        public async Task<ActionResult<LoginResult>> FacebookLoginAsync([FromBody] FacebookLoginViewModel model)
+        {
+            var (domainResult, loginResult) = await _identityService.FacebookLogin(model.AccessToken);
+
+            if (!domainResult.Successed)
+            {
+                return BadRequest(domainResult.ToProblemDetails());
+            }
+
+            return Ok(loginResult);
+        }
+
+        /// <summary>
+        /// Login by google access token
+        /// </summary>
+        /// <param name="model">access token</param>
+        /// <response code="200">Successful login</response>
+        /// <response code="400">Smt went wrong</response>
+        [HttpPost("google-login")]
+        public async Task<ActionResult<LoginResult>> GoogleLoginAsync([FromBody] GoogleLoginViewModel model)
+        {
+            var (domainResult, loginResult) = await _identityService.GoogleLogin(model.AccessToken);
+
+            if (!domainResult.Successed)
+            {
+                return BadRequest(domainResult.ToProblemDetails());
             }
 
             return Ok(loginResult);

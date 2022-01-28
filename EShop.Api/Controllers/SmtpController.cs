@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using EShop.Api.Models.Smtp;
 using EShop.Domain.Smtp;
 using Microsoft.AspNetCore.Mvc;
@@ -18,10 +17,11 @@ public class SmtpController : ControllerBase
     }
 
     /// <summary>
-    /// Send mail
+    /// Send mail to one user
     /// </summary>
     /// <param name="model">email model</param>
-    /// <returns></returns>
+    /// <response code="200">Email success sent</response>
+    /// <response code="400">Smtp is die or incorrect login and password for smtp</response>
     [HttpPost("mail")]
     public async Task<ActionResult> SendOneMailAsync([FromBody] EmailViewmodel model)
     {
@@ -36,6 +36,11 @@ public class SmtpController : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Send mail to multiple users
+    /// </summary>
+    /// <param name="model">Emails model</param>
+    /// <response code="200">Emails success sent</response>
     [HttpPost("mails")]
     public async Task<ActionResult> SendManyMailsAsync([FromBody] EmailsViewModel model)
     {

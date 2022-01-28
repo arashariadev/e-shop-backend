@@ -10,6 +10,8 @@ using EShop.Domain.Cache;
 using EShop.Domain.Catalog;
 using EShop.Domain.Identity;
 using EShop.Domain.Identity.JWT;
+using EShop.Domain.Identity.Oauth2.Facebook;
+using EShop.Domain.Identity.Oauth2.Google;
 using EShop.Domain.Profile;
 using EShop.Domain.Smtp;
 using EShop.MsSql;
@@ -18,6 +20,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -42,9 +45,12 @@ namespace EShop.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            
-            var jwtSettings = new JwtSettings();
-            Configuration.Bind(nameof(jwtSettings), jwtSettings);
+            services.AddHttpClient();
+
+            var jwtSettings = new JwtSettings
+            {
+                Secret = Configuration["SECRET"]
+            };
             services.AddSingleton(jwtSettings);
 
             var smtpSettings = new SmtpSettings()
@@ -56,34 +62,41 @@ namespace EShop.Api
                 Port = int.Parse(Configuration["SMTP_PORT"]),
                 UseSsl = bool.Parse(Configuration["SMTP_USE_SSL"])
             };
-            
             services.AddSingleton(smtpSettings);
+
+            var facebookSettings = new FacebookAuthSettings
+            {
+                AppId = Configuration["FACEBOOK_APPID"],
+                AppSecret = Configuration["FACEBOOK_APPSECRET"]
+            };
+            services.AddSingleton(facebookSettings);
 
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x =>
-            {
-                x.SaveToken = true;
-                try
-                {
-                    x.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings.Secret)),
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                        RequireExpirationTime = false,
-                        ValidateLifetime = true
-                    };
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                }
-            });
+            })
+                .AddJwtBearer(x => 
+                { 
+                    x.SaveToken = true; 
+                    try 
+                    { 
+                        x.TokenValidationParameters = new TokenValidationParameters 
+                        {
+                            ValidateIssuerSigningKey = true, 
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSettings.Secret)), 
+                            ValidateIssuer = false, 
+                            ValidateAudience = false, 
+                            RequireExpirationTime = false, 
+                            ValidateLifetime = true
+                        }; 
+                    }
+                    catch (Exception ex) 
+                    { 
+                        Console.WriteLine(ex); 
+                    } 
+                });
 
             services.AddIdentityCore<UserEntity>(options =>
                 {
@@ -93,6 +106,7 @@ namespace EShop.Api
                     options.Password.RequireLowercase = true;
                     options.Password.RequireUppercase = true;
                 })
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<MsSqlContext>();
 
             services.AddSwaggerGen(options =>
@@ -140,6 +154,9 @@ namespace EShop.Api
             services.AddScoped<ISmtpService, SmtpService>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddScoped<IFacebookService, FacebookService>();
+            services.AddScoped<IGoogleService, GoogleService>();
 
             services.AddSingleton<ICacheIdentityStorage, CacheIdentityStorage>();
             services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();

@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Domain;
-using EShop.Domain.Catalog;
 using EShop.Domain.Identity.JWT;
 
 namespace EShop.Domain.Identity
@@ -19,6 +18,10 @@ namespace EShop.Domain.Identity
             string confirmationPassword);
 
         Task<(DomainResult, LoginResult)> RefreshTokenAsync(string refreshToken);
+
+        Task<(DomainResult, LoginResult)> FacebookLogin(string accessToken);
+
+        Task<(DomainResult, LoginResult)> GoogleLogin(string accessToken);
     }
 
     public class IdentityService : IIdentityService
@@ -57,7 +60,7 @@ namespace EShop.Domain.Identity
                 return result;
             }
 
-            await _identityStorage.Registration(new User(firstName, lastName, phoneNumber, email, password, confirmationPassword));
+            await _identityStorage.Registration(new User(firstName, lastName, phoneNumber, email, receiveMails, password, confirmationPassword));
             
             return DomainResult.Success();
         }
@@ -68,6 +71,24 @@ namespace EShop.Domain.Identity
 
             return result == null
                 ? (DomainResult.Error("Smt went wrong! Login again, please"), default)
+                : (DomainResult.Success(), result);
+        }
+
+        public async Task<(DomainResult, LoginResult)> FacebookLogin(string accessToken)
+        {
+            var result = await _identityStorage.FacebookLoginAsync(accessToken);
+
+            return result is null
+                ? (DomainResult.Error("Invalid access token (or developer)"), default)
+                : (DomainResult.Success(), result);
+        }
+
+        public async Task<(DomainResult, LoginResult)> GoogleLogin(string accessToken)
+        {
+            var result = await _identityStorage.GoogleLoginAsync(accessToken);
+
+            return result is null
+                ? (DomainResult.Error("Invalid access token"), default)
                 : (DomainResult.Success(), result);
         }
     }
