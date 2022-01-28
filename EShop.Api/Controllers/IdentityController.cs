@@ -88,12 +88,32 @@ namespace EShop.Api.Controllers
         /// Login by facebook access token
         /// </summary>
         /// <param name="model">Access token</param>
-        /// <response code="201">Successful logined</response>
+        /// <response code="200">Successful login</response>
         /// <response code="400">Smt went wrong</response>
+        //TODO need to test this endpoint
         [HttpPost("facebook-login")]
         public async Task<ActionResult<LoginResult>> FacebookLoginAsync([FromBody] FacebookLoginViewModel model)
         {
             var (domainResult, loginResult) = await _identityService.FacebookLogin(model.AccessToken);
+
+            if (!domainResult.Successed)
+            {
+                return BadRequest(domainResult.ToProblemDetails());
+            }
+
+            return Ok(loginResult);
+        }
+
+        /// <summary>
+        /// Login by google access token
+        /// </summary>
+        /// <param name="model">access token</param>
+        /// <response code="200">Successful login</response>
+        /// <response code="400">Smt went wrong</response>
+        [HttpPost("google-login")]
+        public async Task<ActionResult<LoginResult>> GoogleLoginAsync([FromBody] GoogleLoginViewModel model)
+        {
+            var (domainResult, loginResult) = await _identityService.GoogleLogin(model.AccessToken);
 
             if (!domainResult.Successed)
             {

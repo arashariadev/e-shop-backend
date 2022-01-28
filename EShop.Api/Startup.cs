@@ -10,8 +10,8 @@ using EShop.Domain.Cache;
 using EShop.Domain.Catalog;
 using EShop.Domain.Identity;
 using EShop.Domain.Identity.JWT;
-using EShop.Domain.Identity.Oauth2;
 using EShop.Domain.Identity.Oauth2.Facebook;
+using EShop.Domain.Identity.Oauth2.Google;
 using EShop.Domain.Profile;
 using EShop.Domain.Smtp;
 using EShop.MsSql;
@@ -45,6 +45,7 @@ namespace EShop.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddHttpClient();
 
             var jwtSettings = new JwtSettings
             {
@@ -155,6 +156,7 @@ namespace EShop.Api
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddScoped<IFacebookService, FacebookService>();
+            services.AddScoped<IGoogleService, GoogleService>();
 
             services.AddSingleton<ICacheIdentityStorage, CacheIdentityStorage>();
             services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();

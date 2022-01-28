@@ -14,5 +14,7 @@ namespace EShop.Domain.Identity
         Task<LoginResult> RefreshToken(string refreshToken);
 
         Task<LoginResult> FacebookLoginAsync(string accessToken);
+
+        Task<LoginResult> GoogleLoginAsync(string accessToken);
     }
 }

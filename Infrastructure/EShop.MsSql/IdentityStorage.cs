@@ -9,6 +9,7 @@ using EShop.Domain.Cache;
 using EShop.Domain.Identity;
 using EShop.Domain.Identity.JWT;
 using EShop.Domain.Identity.Oauth2.Facebook;
+using EShop.Domain.Identity.Oauth2.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
@@ -21,19 +22,22 @@ namespace EShop.MsSql
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ICacheIdentityStorage _cacheStorage;
         private readonly IFacebookService _facebookService;
+        private readonly IGoogleService _googleService;
 
         public IdentityStorage(
             UserManager<UserEntity> userManager,
             JwtSettings jwtSettings,
             RoleManager<IdentityRole> roleManager,
             ICacheIdentityStorage cacheStorage,
-            IFacebookService facebookService)
+            IFacebookService facebookService,
+            IGoogleService googleService)
         {
             _userManager = userManager;
             _jwtSettings = jwtSettings;
             _roleManager = roleManager;
             _cacheStorage = cacheStorage;
             _facebookService = facebookService;
+            _googleService = googleService;
         }
         
         public async Task<LoginResult> Login(string email, string password)
@@ -134,13 +138,67 @@ namespace EShop.MsSql
                     UserName = userInfo.Email,
                     FirstName = userInfo.FirstName,
                     LastName = userInfo.LastName,
-                    Email = userInfo.Email,
-                    ReceiveMails = false
+                    Email = userInfo.Email
                 };
             
                 var result = await _userManager.CreateAsync(newUser);
 
-                if (!result.Succeeded)
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(newUser, "Customer");
+                }
+                else
+                {
+                    return default;
+                }
+
+                var jwt = await GenerateJwtToken(newUser);
+                var refresh = GenerateRefreshToken(newUser.Id);
+
+                await _cacheStorage.SetCacheValueAsync(refresh.Token, refresh);
+
+                return new LoginResult
+                {
+                    JwtToken = jwt,
+                    RefreshToken = refresh.Token
+                };
+            }
+
+            var jwtToken = await GenerateJwtToken(user);
+            var refreshToken = GenerateRefreshToken(user.Id);
+
+            await _cacheStorage.SetCacheValueAsync(refreshToken.Token, refreshToken);
+
+            return new LoginResult
+            {
+                JwtToken = jwtToken,
+                RefreshToken = refreshToken.Token
+            };
+        }
+
+        public async Task<LoginResult> GoogleLoginAsync(string accessToken)
+        {
+            var userInfo = await _googleService.GetUserInfoFromTokenAsync(accessToken);
+
+            var user = await _userManager.FindByEmailAsync(userInfo.Email);
+
+            if (user == null)
+            {
+                var newUser = new UserEntity
+                {
+                    UserName = userInfo.Email,
+                    FirstName = userInfo.FirstName,
+                    LastName = userInfo.LastName,
+                    Email = userInfo.Email
+                };
+            
+                var result = await _userManager.CreateAsync(newUser);
+
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(newUser, "Customer");
+                }
+                else
                 {
                     return default;
                 }
@@ -177,7 +235,8 @@ namespace EShop.MsSql
             var claims = new List<Claim>
             {
                 new(JwtRegisteredClaimNames.Sub, user.Id),
-                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new("id", user.Id)
             };
 
             var userClaims = await _userManager.GetClaimsAsync(user);

@@ -21,8 +21,6 @@
         "SMTP_HOST": "smtp.gmail.com",
         "SMTP_PORT": "465",
         "SMTP_USE_SSL": "true",
-        "GOOGLE_CLIENT_ID": "360924109654-2m4gmaf8oocgnmfiglgekev5crhtth14.apps.googleusercontent.com",
-        "GOOGLE_CLIENT_SECRET": "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",
         "FACEBOOK_APPID": "",
         "FACEBOOK_APPSECRET": ""
       },

@@ -20,6 +20,8 @@ namespace EShop.Domain.Identity
         Task<(DomainResult, LoginResult)> RefreshTokenAsync(string refreshToken);
 
         Task<(DomainResult, LoginResult)> FacebookLogin(string accessToken);
+
+        Task<(DomainResult, LoginResult)> GoogleLogin(string accessToken);
     }
 
     public class IdentityService : IIdentityService
@@ -78,6 +80,15 @@ namespace EShop.Domain.Identity
 
             return result is null
                 ? (DomainResult.Error("Invalid access token (or developer)"), default)
+                : (DomainResult.Success(), result);
+        }
+
+        public async Task<(DomainResult, LoginResult)> GoogleLogin(string accessToken)
+        {
+            var result = await _identityStorage.GoogleLoginAsync(accessToken);
+
+            return result is null
+                ? (DomainResult.Error("Invalid access token"), default)
                 : (DomainResult.Success(), result);
         }
     }
