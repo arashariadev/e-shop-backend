@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using EShop.Domain.Cache;
 using EShop.Domain.Identity;
 using EShop.Domain.Identity.JWT;
+using EShop.Domain.Identity.Oauth2.Facebook;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
@@ -19,13 +20,20 @@ namespace EShop.MsSql
         private readonly JwtSettings _jwtSettings;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ICacheIdentityStorage _cacheStorage;
+        private readonly IFacebookService _facebookService;
 
-        public IdentityStorage(UserManager<UserEntity> userManager, JwtSettings jwtSettings, RoleManager<IdentityRole> roleManager, ICacheIdentityStorage cacheStorage)
+        public IdentityStorage(
+            UserManager<UserEntity> userManager,
+            JwtSettings jwtSettings,
+            RoleManager<IdentityRole> roleManager,
+            ICacheIdentityStorage cacheStorage,
+            IFacebookService facebookService)
         {
             _userManager = userManager;
             _jwtSettings = jwtSettings;
             _roleManager = roleManager;
             _cacheStorage = cacheStorage;
+            _facebookService = facebookService;
         }
         
         public async Task<LoginResult> Login(string email, string password)
@@ -103,6 +111,62 @@ namespace EShop.MsSql
             };
 
             return result;
+        }
+
+        //TODO search in cache first?
+        public async Task<LoginResult> FacebookLoginAsync(string accessToken)
+        {
+            var validationResult = await _facebookService.ValidateAccessTokenAsync(accessToken);
+
+            if (!validationResult.Data.IsValid)
+            {
+                return default;
+            }
+
+            var userInfo = await _facebookService.GetUserInfoByToken(accessToken);
+
+            var user = await _userManager.FindByEmailAsync(userInfo.Email);
+
+            if (user == null)
+            {
+                var newUser = new UserEntity
+                {
+                    UserName = userInfo.Email,
+                    FirstName = userInfo.FirstName,
+                    LastName = userInfo.LastName,
+                    Email = userInfo.Email,
+                    ReceiveMails = false
+                };
+            
+                var result = await _userManager.CreateAsync(newUser);
+
+                if (!result.Succeeded)
+                {
+                    return default;
+                }
+
+                var jwt = await GenerateJwtToken(newUser);
+                var refresh = GenerateRefreshToken(newUser.Id);
+
+                await _cacheStorage.SetCacheValueAsync(refresh.Token, refresh);
+
+                return new LoginResult
+                {
+                    JwtToken = jwt,
+                    RefreshToken = refresh.Token
+                };
+            }
+
+            var jwtToken = await GenerateJwtToken(user);
+            var refreshToken = GenerateRefreshToken(user.Id);
+
+            await _cacheStorage.SetCacheValueAsync(refreshToken.Token, refreshToken);
+
+            return new LoginResult
+            {
+                JwtToken = jwtToken,
+                RefreshToken = refreshToken.Token
+            };
         }
 
         private async Task<string> GenerateJwtToken(UserEntity user)

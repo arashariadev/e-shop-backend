@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using EShop.Api.Models.Smtp;
 using EShop.Domain.Smtp;
 using Microsoft.AspNetCore.Mvc;
