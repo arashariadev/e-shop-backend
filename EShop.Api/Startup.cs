@@ -14,6 +14,7 @@ using EShop.Domain.Identity.Oauth2.Facebook;
 using EShop.Domain.Identity.Oauth2.Google;
 using EShop.Domain.Profile;
 using EShop.Domain.Smtp;
+using EShop.Domain.ThirdParty;
 using EShop.MsSql;
 using EShop.Redis;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -53,7 +54,7 @@ namespace EShop.Api
             };
             services.AddSingleton(jwtSettings);
 
-            var smtpSettings = new SmtpSettings()
+            var smtpSettings = new SmtpSettings
             {
                 EmailId = Configuration["SMTP_EMAiL_ID"],
                 Host = Configuration["SMTP_HOST"],
@@ -70,6 +71,12 @@ namespace EShop.Api
                 AppSecret = Configuration["FACEBOOK_APPSECRET"]
             };
             services.AddSingleton(facebookSettings);
+
+            var novaPoshtaSettings = new NovaPoshtaSettings
+            {
+                Key = Configuration["N_API_KEY"]
+            };
+            services.AddSingleton(novaPoshtaSettings);
 
             services.AddAuthentication(x =>
             {
@@ -172,6 +179,8 @@ namespace EShop.Api
             services.AddScoped<IValidator<ProfileContext>, ProfileValidator>();
             services.AddScoped<IProfileStorage, ProfileStorage>();
             services.AddScoped<IProfileService, ProfileService>();
+
+            services.AddScoped<INovaPoshtaHttpClient, NovaPoshtaHttpClient>();
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, MsSqlContext context, ILogger<Startup> logger)
