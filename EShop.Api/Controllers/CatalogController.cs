@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Threading.Tasks;
 using EShop.Api.Helpers;
-using EShop.Api.Models;
 using EShop.Api.Models.CatalogItem;
 using EShop.Domain.Catalog;
 using Microsoft.AspNetCore.Http;

@@ -47,7 +47,6 @@ namespace EShop.Api.Controllers
         /// <summary>
         /// Update profile
         /// </summary>
-        /// <param name="userId">user id</param>
         /// <param name="model">update profile model</param>
         /// <response code="204">Profile successfully updated</response>
         /// <response code="404">Nice try</response>

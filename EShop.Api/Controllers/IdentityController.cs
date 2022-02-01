@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using EShop.Api.Helpers;
 using EShop.Api.Models.Identity;
-using EShop.Domain.Cache;
 using EShop.Domain.Identity;
 using EShop.Domain.Identity.JWT;
 using Microsoft.AspNetCore.Http;
@@ -14,12 +13,10 @@ namespace EShop.Api.Controllers
     public class IdentityController : ControllerBase
     {
         private readonly IIdentityService _identityService;
-        private readonly ICacheIdentityStorage _cacheIdentity;
 
-        public IdentityController(IIdentityService identityService, ICacheIdentityStorage cacheIdentity)
+        public IdentityController(IIdentityService identityService)
         {
             _identityService = identityService;
-            _cacheIdentity = cacheIdentity;
         }
 
         /// <summary>
@@ -121,13 +118,6 @@ namespace EShop.Api.Controllers
             }
 
             return Ok(loginResult);
-        }
-
-        //TODO get cached value by key isnt work
-        [HttpGet("check-cache")]
-        public async Task<ActionResult> CheckCacheAsync([FromQuery] string key)
-        {
-            return Ok(await _cacheIdentity.GetCacheValueAsync(key));
         }
     }
 }
