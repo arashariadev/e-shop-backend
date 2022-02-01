@@ -15,6 +15,7 @@ using EShop.Domain.Identity.Oauth2.Google;
 using EShop.Domain.Profile;
 using EShop.Domain.Smtp;
 using EShop.Domain.ThirdParty;
+using EShop.Domain.ThirdParty.CurrencyApi;
 using EShop.MsSql;
 using EShop.Redis;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -181,6 +182,7 @@ namespace EShop.Api
             services.AddScoped<IProfileService, ProfileService>();
 
             services.AddScoped<INovaPoshtaHttpClient, NovaPoshtaHttpClient>();
+            services.AddScoped<IPrivatBankHttpClient, PrivatBankHttpClient>();
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, MsSqlContext context, ILogger<Startup> logger)

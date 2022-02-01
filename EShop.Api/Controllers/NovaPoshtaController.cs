@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using EShop.Api.Models.NovaPoshta;
 using EShop.Domain.ThirdParty;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,10 +17,10 @@ public class NovaPoshtaController : ControllerBase
         _poshtaHttpClient = poshtaHttpClient;
     }
 
-    [HttpGet]
-    public async Task<ActionResult<DeliveryStatusResponse>> GetDeliveryStatusAsync([FromQuery] string phone, [FromQuery, Required] string documentNumber)
+    [HttpPost]
+    public async Task<ActionResult<DeliveryStatusResponse>> GetDeliveryStatusAsync([FromBody] GetDeliveryStatusModel model)
     {
-        var response = await _poshtaHttpClient.GetDeliveryStatusAsync(documentNumber, phone);
+        var response = await _poshtaHttpClient.GetDeliveryStatusAsync(model.DocumentNumber, model.Phone);
 
         return Ok(response);
     }

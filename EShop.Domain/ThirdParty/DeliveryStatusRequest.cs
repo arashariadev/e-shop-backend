@@ -16,7 +16,7 @@ public class DeliveryStatusRequest
 
 public class MethodProperties
 {
-    public List<Document> Documents { get; set; }
+    public Document[] Documents { get; set; }
 }
 
 public class Document

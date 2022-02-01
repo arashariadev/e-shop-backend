@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -35,7 +34,7 @@ public class NovaPoshtaHttpClient : INovaPoshtaHttpClient
             CalledMethod = "getStatusDocument",
             MethodProperties = new MethodProperties()
             {
-                Documents = new List<Document>
+                Documents = new []
                 {
                     new Document()
                     {
@@ -46,13 +45,14 @@ public class NovaPoshtaHttpClient : INovaPoshtaHttpClient
             }
         };
 
+        var json = JsonConvert.SerializeObject(requestModel);
+
         var requestModelJson = new StringContent(
-            JsonSerializer.Serialize(requestModel),
+            json,
             Encoding.UTF8,
-            Application.Json);
-        
+            "application/json");
+
         var response = await _httpClient.CreateClient().PostAsync(TrackingUrl, requestModelJson);
-        response.EnsureSuccessStatusCode();
 
         var responseAsString = await response.Content.ReadAsStringAsync();
 
